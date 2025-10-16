@@ -1,5 +1,6 @@
 #Comprovar funcionament de connexió a diferents adreces IP
 # Jordi Dragan
+# Este script te una llista de varies adreces IP (Les DNS de Cloudflare, Google i la IP del nostre servidor) i fa un ping. Imprimeix en la consola si el servidor funciona o no funciona
 
 import os 
 
