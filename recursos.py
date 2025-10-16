@@ -1,5 +1,6 @@
 # Monitor d'us de CPU
 # Jordi Dragan
+# Este Script agafa algunes dades dels components del equip i les guarda en variables per a després guardales en un arxiu cada 5 segons, que cada dia es crea un nou
 
 import psutil
 import time
