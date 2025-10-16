@@ -1,5 +1,6 @@
 # Ruleta rusa
-# Jordi Dragan mejorada
+# Jordi Dragan
+# Este script genera dos números aleatoris, si coincideixen el sistema s'apagarà
 
 import random
 import time
