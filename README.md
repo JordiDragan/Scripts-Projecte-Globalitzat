@@ -1,9 +1,9 @@
 # Certbot Python
-
+Creem l'arxiu del servei
 ```bash
 sudo nano /etc/systemd/system/certbot-python.service
 ```
-
+Configuració del arxiu
 ```ini
 [Unit]
 Description=Servei de renovació de Python
@@ -21,7 +21,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target```
 ```
-
+L'activem
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable certbot-python.service
