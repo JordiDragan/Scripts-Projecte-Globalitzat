@@ -1,0 +1,24 @@
+---
+- name: Configuració VPS
+  hosts: proxmox
+  vars_files:
+    - variables_config.yml
+  become: yes
+  tasks:
+    - name: Creació VPS
+      shell: |
+          qm create {{ vmid }} \
+          --name {{ nom }} \
+          --ostype l26 \
+          --bios ovmf \
+          --efidisk0 MVClients:1,efitype=4m,pre-enrolled-keys=0 \
+          --cdrom local:iso/ubuntu-22.04.5-live-server-amd64.iso \
+          --scsi0 MVClients:{{ disco }} \
+          --scsihw virtio-scsi-pci \
+          --boot "order=scsi0;ide2" \
+          --sockets 1 \
+          --cores {{ cpu }} \
+          --memory {{ ram }} \
+          --balloon 512 \
+          --net0 virtio,bridge=vmbr50 \
+          --start 1
