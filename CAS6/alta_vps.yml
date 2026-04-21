@@ -7,18 +7,48 @@
   tasks:
     - name: Creació VPS
       shell: |
-          qm create {{ vmid }} \
-          --name {{ nom }} \
-          --ostype l26 \
-          --bios ovmf \
-          --efidisk0 MVClients:1,efitype=4m,pre-enrolled-keys=0 \
-          --cdrom local:iso/ubuntu-22.04.5-live-server-amd64.iso \
-          --scsi0 MVClients:{{ disco }} \
-          --scsihw virtio-scsi-pci \
-          --boot "order=scsi0;ide2" \
-          --sockets 1 \
-          --cores {{ cpu }} \
-          --memory {{ ram }} \
-          --balloon 512 \
-          --net0 virtio,bridge=vmbr50 \
-          --start 1
+        qm clone 9000 {{ vmid }} --name "{{nom}}-vps" --full 1 --storage MVClients
+        qm set {{ vmid }} --cores {{ cpu }} --memory {{ ram }} --balloon 512 --net0 virtio,bridge=vmbr50
+        qm disk resize {{ vmid }} scsi0 {{ disco }}G
+        qm set {{ vmid }} --ipconfig0 ip={{ ip }}/23,gw=192.168.114.1 --ciuser {{ nom }} --cipassword "{{ contrasenya }}"
+    - name: Encendre VPS
+      shell: |
+        qm start {{ vmid }}
+- name: Mikrotik redirect
+  hosts: mikrotik
+  gather_facts: no
+  tasks:
+    - name: Redirecció SSH
+      routeros_command:
+        commands:
+         - "/ip firewall nat add action=dst-nat chain=dstnat comment=\"{{ nom }} VPS\" dst-port={{ port }} in-interface=ether5.WAN protocol=tcp to-addresses={{ ip }} to-ports=22"
+- name: Registre DNS
+  hosts: win
+  tasks:
+    - name: Afegir registre
+      ansible.windows.win_powershell:
+        script: |
+          Add-DnsServerResourceRecordA -Name "{{ nom }}" -ZoneName "iemhosting.asix2.iesmontsia.cat" -AllowUpdateAny -IPv4Address "192.168.213.11"
+- name: Proxy Invers
+  hosts: rasp
+  become: yes
+  tasks:
+    - name: Creació virtualhost
+      shell: |
+        touch /etc/apache2/sites-available/{{ nom }}.conf
+    - name: Configuració virtualhost
+      copy:
+        dest: /etc/apache2/sites-available/{{ nom }}.conf
+        content: |
+          <VirtualHost *:80>
+              ServerName {{ nom }}.iemhosting.asix2.iesmontsia.cat
+              ProxyPreserveHost On
+              ProxyPass / http://{{ ip }}:80/
+              ProxyPassReverse / http://{{ ip }}:80/
+              ErrorLog ${APACHE_LOG_DIR}/{{ nom }}_error.log
+              CustomLog ${APACHE_LOG_DIR}/{{ nom }}_access.log combined
+          </VirtualHost>
+    - name: Habilitar virtualhost
+      shell: |
+        a2ensite {{ nom }}.conf
+        systemctl reload apache2
