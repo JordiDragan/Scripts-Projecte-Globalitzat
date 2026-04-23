@@ -104,7 +104,7 @@ def main():
         nom = input("NOM: ")
         pla = input("PLÀ (lite/pro/business): ")
     elif len(sys.argv) != 4:
-        print("Falten arguments")
+        print("Falten o sobren arguments")
         print("alta_vps.py <VMID> <NOM> <PLÀ>")
         sys.exit(1)
     else:
