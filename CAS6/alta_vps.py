@@ -164,7 +164,6 @@ def provisionar_vps(nom, correu, pla, log=print):
         "ip": ip,
         "contrasenya": contrasenya,
         "port": port,
-        "glpi_app_token": os.getenv('GLPI_APP_TOKEN')
     }
     vars_ansible.update(plan_details)
     comanda_ansible = [
