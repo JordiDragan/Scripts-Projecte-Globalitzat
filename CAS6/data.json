@@ -1,0 +1,192 @@
+{
+  "id": 999,
+  "parent_id": 0,
+  "status": "processing",
+  "currency": "EUR",
+  "version": "10.7.0",
+  "prices_include_tax": false,
+  "date_created": "2026-01-01T12:00:00",
+  "date_modified": "2026-01-01T12:05:00",
+  "discount_total": "0.00",
+  "discount_tax": "0.00",
+  "shipping_total": "0.00",
+  "shipping_tax": "0.00",
+  "cart_tax": "0.00",
+  "total": "15.00",
+  "total_tax": "0.00",
+  "customer_id": 0,
+  "order_key": "wc_order_example123",
+  "billing": {
+    "first_name": "jose",
+    "last_name": "casanova",
+    "company": "",
+    "address_1": "carrer de mostra 123",
+    "address_2": "",
+    "city": "barcelona",
+    "state": "B",
+    "postcode": "08001",
+    "country": "ES",
+    "email": "jose.casanova@example.com",
+    "phone": ""
+  },
+  "shipping": {
+    "first_name": "jose",
+    "last_name": "casanova",
+    "company": "",
+    "address_1": "carrer de mostra 123",
+    "address_2": "",
+    "city": "barcelona",
+    "state": "B",
+    "postcode": "08001",
+    "country": "ES",
+    "phone": ""
+  },
+  "payment_method": "cod",
+  "payment_method_title": "Pagament contra reemborsament",
+  "transaction_id": "",
+  "customer_ip_address": "203.0.113.10",
+  "customer_user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+  "created_via": "store-api",
+  "customer_note": "pedido de ejemplo",
+  "date_completed": null,
+  "date_paid": null,
+  "cart_hash": "examplehash1234567890",
+  "number": "999",
+  "meta_data": [
+    {
+      "id": 820,
+      "key": "_coupons_hash",
+      "value": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": 842,
+      "key": "_debug_log_source_pending_deletion",
+      "value": "place-order-debug-example"
+    },
+    {
+      "id": 821,
+      "key": "_fees_hash",
+      "value": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": 819,
+      "key": "_shipping_hash",
+      "value": "64656d37dd2ad316b3e09febf0b4dff2"
+    },
+    {
+      "id": 822,
+      "key": "_taxes_hash",
+      "value": "d751713988987e9331980363e24189ce"
+    },
+    {
+      "id": 836,
+      "key": "_wc_order_attribution_device_type",
+      "value": "Mobile"
+    },
+    {
+      "id": 834,
+      "key": "_wc_order_attribution_session_count",
+      "value": "1"
+    },
+    {
+      "id": 831,
+      "key": "_wc_order_attribution_session_entry",
+      "value": "https://example.com/cron"
+    },
+    {
+      "id": 833,
+      "key": "_wc_order_attribution_session_pages",
+      "value": "5"
+    },
+    {
+      "id": 832,
+      "key": "_wc_order_attribution_session_start_time",
+      "value": "2026-01-01 12:00:00"
+    },
+    {
+      "id": 829,
+      "key": "_wc_order_attribution_source_type",
+      "value": "typein"
+    },
+    {
+      "id": 835,
+      "key": "_wc_order_attribution_user_agent",
+      "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+    },
+    {
+      "id": 830,
+      "key": "_wc_order_attribution_utm_source",
+      "value": "example-source"
+    },
+    {
+      "id": 823,
+      "key": "is_vat_exempt",
+      "value": "no"
+    }
+  ],
+  "line_items": [
+    {
+      "id": 51,
+      "name": "Delta Lite - VPS Demo",
+      "product_id": 71,
+      "variation_id": 0,
+      "quantity": 1,
+      "tax_class": "",
+      "subtotal": "15.00",
+      "subtotal_tax": "0.00",
+      "total": "15.00",
+      "total_tax": "0.00",
+      "taxes": [],
+      "meta_data": [],
+      "sku": "",
+      "global_unique_id": "",
+      "price": 15,
+      "image": {
+        "id": "64",
+        "src": "https://example.com/image.png"
+      },
+      "parent_name": null
+    }
+  ],
+  "tax_lines": [],
+  "shipping_lines": [],
+  "fee_lines": [],
+  "coupon_lines": [],
+  "refunds": [],
+  "payment_url": "https://example.com/order-pay/999/?pay_for_order=true&key=wc_order_example123",
+  "is_editable": false,
+  "needs_payment": false,
+  "needs_processing": true,
+  "date_created_gmt": "2026-01-01T12:00:00",
+  "date_modified_gmt": "2026-01-01T12:05:00",
+  "date_completed_gmt": null,
+  "date_paid_gmt": null,
+  "currency_symbol": "€",
+  "_links": {
+    "self": [
+      {
+        "href": "https://example.com/wp-json/wc/v3/orders/999",
+        "targetHints": {
+          "allow": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://example.com/wp-json/wc/v3/orders"
+      }
+    ],
+    "email_templates": [
+      {
+        "embeddable": true,
+        "href": "https://example.com/wp-json/wc/v3/orders/999/actions/email_templates"
+      }
+    ]
+  }
+}
