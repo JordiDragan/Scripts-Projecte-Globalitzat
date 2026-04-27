@@ -9,13 +9,12 @@ Description=Servei de comandes del WooCommerce
 After=network.target
 
 [Service]
-User=root
-Group=root
-
-ExecStart=/usr/bin/python3 /home/user/ansible/webhook.py
-
+ExecStart=/usr/bin/python3 /home/mail3/ansible/webhook.py
+WorkingDirectory=/home/mail3/ansible
+User=mail3
+Group=mail3
+Environment=PYTHONPATH=/home/mail3/.local/lib/python3.13/site-packages
 Restart=always
-RestartSec=5
 
 [Install]
 WantedBy=multi-user.target```
