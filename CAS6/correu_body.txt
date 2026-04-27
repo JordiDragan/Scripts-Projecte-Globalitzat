@@ -1,0 +1,31 @@
+Benvolgut/da {nom},
+
+Gràcies per confiar en IEM Hosting. És un plaer donar-li la benvinguda com a nou client.
+
+A continuació li facilitem les credencials d'accés al seu servei de VPS:
+
+────────────────────────────────────
+ FTP
+────────────────────────────────────
+ Usuari:      {nom}
+ Contrasenya: {contrasenya}
+ Port:        {port}
+ IP Pública:  185.13.77.175
+
+────────────────────────────────────
+ GESTOR D'INCIDÈNCIES
+────────────────────────────────────
+ Enllaç:      https://glpi.iemhosting.asix2.iesmontsia.cat/
+ Usuari:      {nom}
+ Contrasenya: {contrasenya}
+
+────────────────────────────────────
+
+Si té qualsevol dubte o necessita assistència, no dubti en contactar amb el nostre equip a través del gestor d'incidències o el formulari que pot trovar en la nostra web.
+
+Li agraïm la seva confiança i esperem poder oferir-li un servei excel·lent.
+
+Atentament,
+
+IEM Hosting
+────────────────────────────────────
