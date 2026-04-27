@@ -76,9 +76,6 @@ def buscar_ip(segment):
             return ip_str
     return None
 
-import smtplib
-from email.mime.text import MIMEText
-
 def enviar_correu(destinatari, nom, contrasenya, port):
     password = os.getenv('MAIL_PASSWORD')
     remitent = os.getenv('MAIL_USER')
