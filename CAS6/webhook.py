@@ -3,9 +3,15 @@ import os
 import subprocess
 import sys
 import threading
+import traceback
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+ANSIBLE_PLAYBOOK_BIN = "/home/mail3/.local/bin/ansible-playbook"
+
+
+def _log(mensaje):
+    print(mensaje, flush=True)
 
 
 def _extraer_datos_cliente(data):
@@ -55,41 +61,92 @@ def _detectar_tipo_producto(data):
 
 @app.route('/webhook', methods=['POST'])
 def receive_webhook():
+    raw_body = request.get_data(as_text=True)
     data = request.get_json(silent=True) or {}
+
+    _log("\n=== WEBHOOK RECIBIDO ===")
+    _log(f"Metodo: {request.method}")
+    _log(f"Ruta: {request.path}")
+    _log(f"IP: {request.remote_addr}")
+    _log(f"Content-Type: {request.content_type}")
+    _log("Body bruto:")
+    _log(raw_body or "<vacío>")
+    _log("JSON parseado:")
+    _log(json.dumps(data, indent=4, ensure_ascii=False) if data else "<sin JSON valido>")
+    _log("========================")
 
     nom, correo = _extraer_datos_cliente(data)
     pla = _extraer_plan(data)
     tipo_producto = _detectar_tipo_producto(data)
-    
+
+    _log(f"Cliente detectado: nombre='{nom}' correo='{correo}'")
+    _log(f"Plan detectado: {pla}")
+    _log(f"Producto detectado: {tipo_producto or 'desconocido'}")
+
     if nom and correo:
         if tipo_producto == 'hosting':
-            script_alta = os.path.join(os.path.dirname(__file__), "alta_hosting.py")
+            _log("Ruta elegida: alta hosting")
+            script_seleccionado = os.path.join(os.path.dirname(__file__), "alta_hosting.py")
         else:
-            script_alta = os.path.join(os.path.dirname(__file__), "alta_vps.py")
+            _log("Ruta elegida: alta VPS")
+            script_seleccionado = os.path.join(os.path.dirname(__file__), "alta_vps.py")
 
         def ejecutar_alta():
             try:
-                print("\n--- NUEVO WEBHOOK RECIBIDO ---")
-                print(json.dumps(data, indent=4, ensure_ascii=False))
-                print(f"Nombre: {nom}")
-                print(f"Correo: {correo}")
-                print(f"Plan: {pla}")
-                print(f"Producto: {tipo_producto or 'desconocido'}")
-                print("------------------------------\n")
-                if not os.path.exists(script_alta):
-                    raise FileNotFoundError(f"No existe el script esperado: {script_alta}")
-                subprocess.run(
-                    [sys.executable, script_alta, nom, correo, pla],
-                    check=True,
-                )
-                print(f"Alta {tipo_producto or 'vps'} completada para {correo}")
+                _log("Hilo de alta iniciado")
+                _log(f"Script base seleccionado: {script_seleccionado}")
+
+                if tipo_producto == 'hosting':
+                    plan_num = {'lite': 1, 'pro': 2, 'business': 3}.get(pla, 1)
+                    _log(f"Plan numerico para hosting: {plan_num}")
+
+                    playbook = os.path.join(os.path.dirname(__file__), "hosting", "altaHosting.yml")
+                    _log(f"Playbook de hosting: {playbook}")
+                    if not os.path.exists(playbook):
+                        raise FileNotFoundError(f"No existe el playbook: {playbook}")
+
+                    comando = [
+                        ANSIBLE_PLAYBOOK_BIN, playbook,
+                        "-e", f"db_user={nom}",
+                        "-e", f"correud={correo}",
+                        "-e", f"paquet={plan_num}",
+                    ]
+                    if not os.path.exists(ANSIBLE_PLAYBOOK_BIN):
+                        raise FileNotFoundError(f"No existe el binario de ansible: {ANSIBLE_PLAYBOOK_BIN}")
+                    _log(f"Ejecutando comando: {' '.join(comando)}")
+                    subprocess.run(
+                        comando,
+                        check=True,
+                    )
+                    _log(f"Alta hosting completada para {correo}")
+
+                else:
+                    script_vps = os.path.join(os.path.dirname(__file__), "alta_vps.py")
+                    _log(f"Script de VPS: {script_vps}")
+                    if not os.path.exists(script_vps):
+                        raise FileNotFoundError(f"No existe el script: {script_vps}")
+
+                    comando = [sys.executable, script_vps, nom, correo, pla]
+                    _log(f"Ejecutando comando: {' '.join(comando)}")
+                    subprocess.run(
+                        comando,
+                        check=True,
+                    )
+                    _log(f"Alta VPS completada para {correo}")
+
+            except subprocess.CalledProcessError as exc:
+                _log(f"Proceso falló (código {exc.returncode}): {exc}")
+                traceback.print_exc()
             except Exception as exc:
-                print(f"Error al ejecutar alta_vps: {exc}")
+                _log(f"Error al ejecutar alta: {exc}")
+                traceback.print_exc()
 
         threading.Thread(target=ejecutar_alta, daemon=True).start()
+        _log("Respuesta 202 enviada al cliente")
 
         return jsonify({'status': 'accepted', 'nombre': nom, 'correo': correo, 'pla': pla}), 202
+    _log("Faltan first_name, last_name o email en el payload")
     return jsonify({'status': 'error', 'message': 'Faltan first_name, last_name o email'}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6769, threaded=True)
+    app.run(host='192.168.213.12', port=6769, threaded=True)
